@@ -106,16 +106,53 @@ JOIN Produtos AS pr ON pr.CodigoDoProduto = dp.CodigoDoProduto;
 
 
 -- Questao 16 --
+SELECT
+    f.Nome AS Funcionario,
+    SUM(dp.PrecoUnitário * dp.Quantidade * 
+        (1 - CASE WHEN dp.Desconto > 1 THEN dp.Desconto/100.0 ELSE dp.Desconto*1.0 END)
+    ) AS TotalVendido,
+    SUM(dp.PrecoUnitário * dp.Quantidade * 
+        (1 - CASE WHEN dp.Desconto > 1 THEN dp.Desconto/100.0 ELSE dp.Desconto*1.0 END)
+    ) * 0.05 AS Comissao_5,
+    SUM(dp.PrecoUnitário * dp.Quantidade * 
+        (1 - CASE WHEN dp.Desconto > 1 THEN dp.Desconto/100.0 ELSE dp.Desconto*1.0 END)
+    ) * 0.10 AS Comissao_10
+FROM Funcionarios AS f
+JOIN Pedidos            AS p  ON p.CodigoDoFuncionario = f.CodigoDoFuncionario
+JOIN Detalhes_do_Pedido AS dp ON dp.NumeroDoPedido    = p.NumeroDoPedido
+GROUP BY f.Nome
+ORDER BY TotalVendido DESC;
 
 
 -- Questao 17 --
+SELECT ca.NomeDaCategoria, SUM(dp.Quantidade) AS QtdeVendida
+FROM Detalhes_do_Pedido AS dp
+JOIN Produtos   AS pr ON pr.CodigoDoProduto   = dp.CodigoDoProduto
+JOIN Categorias AS ca ON ca.CodigoDaCategoria = pr.CodigoDaCategoria
+GROUP BY ca.NomeDaCategoria;
 
 
 -- Questao 18 --
+SELECT t.NomeDaEmpresa AS Transportadora, COALESCE(SUM(p.Frete), 0) AS TotalFretes, COUNT(p.NumeroDoPedido) AS PedidosAtendidos
+FROM Transportadoras AS t
+LEFT JOIN Pedidos AS p ON p.CodigoDaTransportadora = t.CodigoDaTransportadora
+GROUP BY t.NomeDaEmpresa;
 
 
 -- Questao 19 --
+SELECT c.NomeDaEmpresa AS Cliente,
+    SUM(dp.PrecoUnitário * dp.Quantidade) AS DescontoConcedido
+FROM Clientes AS c
+JOIN Pedidos            AS p  ON p.CodigoDoCliente = c.CodigoDoCliente
+JOIN Detalhes_do_Pedido AS dp ON dp.NumeroDoPedido = p.NumeroDoPedido
+GROUP BY c.NomeDaEmpresa;
 
 
 -- Questao 20 --
-
+SELECT
+    f.Nome AS Funcionario,
+    SUM( dp.PrecoUnitário * dp.Quantidade) AS DescontoConcedido
+FROM Funcionarios AS f
+JOIN Pedidos            AS p  ON p.CodigoDoFuncionario = f.CodigoDoFuncionario
+JOIN Detalhes_do_Pedido AS dp ON dp.NumeroDoPedido = p.NumeroDoPedido
+GROUP BY f.Nome;
