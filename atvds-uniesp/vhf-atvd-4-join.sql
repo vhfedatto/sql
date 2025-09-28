@@ -78,7 +78,6 @@ JOIN Produtos    AS pr  ON pr.CodigoDoProduto = dp.CodigoDoProduto
 JOIN Categorias  AS ca  ON ca.CodigoDaCategoria = pr.CodigoDaCategoria;
 
 
-
 -- Questao 12 --
 SELECT p.NumeroDoPedido, p.DataDoPedido, c.NomeDaEmpresa AS Cliente, t.NomeDaEmpresa AS Transportadora
 FROM Pedidos AS p
@@ -145,7 +144,7 @@ GROUP BY c.NomeDaEmpresa;
 
 
 -- Questao 20 --
-SELECT f.Nome AS Funcionario, SUM( dp.PrecoUnitário * dp.Quantidade) AS DescontoConcedido
+SELECT f.Nome AS Funcionario, SUM(dp.PrecoUnitário * dp.Quantidade) AS DescontoConcedido
 FROM Funcionarios AS f
 JOIN Pedidos AS p  ON p.CodigoDoFuncionario = f.CodigoDoFuncionario
 JOIN Detalhes_do_Pedido AS dp ON dp.NumeroDoPedido = p.NumeroDoPedido
